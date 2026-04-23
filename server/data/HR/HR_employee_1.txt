@@ -1,0 +1,15 @@
+Employee Name: Sarah Mitchell
+Role: HR Specialist
+Years at Company: 4
+
+Experience 1:
+Problem: Employees frequently asked about vacation policy confusion.
+Solution: Created a clear internal document and held onboarding sessions.
+
+Experience 2:
+Problem: Conflict between two team members.
+Solution: Conducted mediation and introduced conflict resolution training.
+
+Experience 3:
+Problem: Low employee engagement.
+Solution: Implemented monthly feedback surveys and recognition programs.

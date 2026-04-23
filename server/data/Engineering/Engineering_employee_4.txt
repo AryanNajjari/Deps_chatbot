@@ -1,0 +1,15 @@
+Employee Name: Sophia Martinez
+Role: DevOps Engineer
+Years at Company: 6
+
+Experience 1:
+Problem: Deployment failures.
+Solution: Automated CI/CD pipelines.
+
+Experience 2:
+Problem: Environment inconsistencies.
+Solution: Used containerization.
+
+Experience 3:
+Problem: Security vulnerabilities.
+Solution: Implemented security scans.

@@ -1,0 +1,15 @@
+Employee Name: Amanda Davis
+Role: Cost Analyst
+Years at Company: 3
+
+Experience 1:
+Problem: High operational costs.
+Solution: Identified waste and reduced expenses.
+
+Experience 2:
+Problem: Pricing inefficiencies.
+Solution: Optimized pricing models.
+
+Experience 3:
+Problem: Inconsistent financial data.
+Solution: Standardized reporting templates.

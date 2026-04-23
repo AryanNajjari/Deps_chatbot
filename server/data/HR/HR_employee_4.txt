@@ -1,0 +1,15 @@
+Employee Name: Michael Brown
+Role: HR Analyst
+Years at Company: 5
+
+Experience 1:
+Problem: Inefficient performance reviews.
+Solution: Introduced digital evaluation system.
+
+Experience 2:
+Problem: Employee burnout.
+Solution: Promoted flexible work schedules.
+
+Experience 3:
+Problem: Lack of training programs.
+Solution: Developed internal training modules.

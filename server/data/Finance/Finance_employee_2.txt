@@ -1,0 +1,15 @@
+Employee Name: Lisa Wong
+Role: Accountant
+Years at Company: 4
+
+Experience 1:
+Problem: Invoice discrepancies.
+Solution: Introduced validation checks.
+
+Experience 2:
+Problem: Late vendor payments.
+Solution: Automated payment scheduling.
+
+Experience 3:
+Problem: Audit issues.
+Solution: Maintained better documentation practices.

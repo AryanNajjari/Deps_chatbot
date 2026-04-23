@@ -1,0 +1,15 @@
+Employee Name: Emily Rodriguez
+Role: HR Coordinator
+Years at Company: 3
+
+Experience 1:
+Problem: Payroll complaints.
+Solution: Coordinated with finance to ensure timely processing.
+
+Experience 2:
+Problem: Lack of diversity hiring.
+Solution: Expanded recruitment channels.
+
+Experience 3:
+Problem: Poor communication from management.
+Solution: Introduced weekly HR newsletters.

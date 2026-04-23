@@ -1,0 +1,15 @@
+Employee Name: Jessica Lee
+Role: HR Generalist
+Years at Company: 4
+
+Experience 1:
+Problem: Frequent leave policy violations.
+Solution: Clarified policies and enforced tracking system.
+
+Experience 2:
+Problem: Poor onboarding experience.
+Solution: Created structured onboarding checklist.
+
+Experience 3:
+Problem: Communication gaps.
+Solution: Introduced Slack-based HR support channel.

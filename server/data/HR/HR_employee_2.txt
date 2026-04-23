@@ -1,0 +1,15 @@
+Employee Name: David Chen
+Role: HR Manager
+Years at Company: 6
+
+Experience 1:
+Problem: High employee turnover.
+Solution: Introduced exit interviews and improved onboarding process.
+
+Experience 2:
+Problem: Employees unclear about benefits.
+Solution: Organized quarterly benefits workshops.
+
+Experience 3:
+Problem: Delayed hiring process.
+Solution: Streamlined recruitment workflow using ATS tools.

@@ -1,0 +1,15 @@
+Employee Name: Robert Kim
+Role: Finance Manager
+Years at Company: 7
+
+Experience 1:
+Problem: Cash flow instability.
+Solution: Improved forecasting and reserves.
+
+Experience 2:
+Problem: Poor financial visibility.
+Solution: Built dashboards.
+
+Experience 3:
+Problem: Budget misuse.
+Solution: Enforced department-level approvals.

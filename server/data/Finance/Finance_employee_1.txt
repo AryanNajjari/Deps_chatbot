@@ -1,0 +1,15 @@
+Employee Name: John Carter
+Role: Financial Analyst
+Years at Company: 5
+
+Experience 1:
+Problem: Budget forecasting errors.
+Solution: Improved data models and added scenario analysis.
+
+Experience 2:
+Problem: Delayed reporting.
+Solution: Automated report generation.
+
+Experience 3:
+Problem: Cost overruns.
+Solution: Implemented strict budget tracking system.

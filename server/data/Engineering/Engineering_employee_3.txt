@@ -1,0 +1,15 @@
+Employee Name: Daniel Garcia
+Role: Frontend Developer
+Years at Company: 3
+
+Experience 1:
+Problem: Poor UI performance.
+Solution: Optimized rendering.
+
+Experience 2:
+Problem: Inconsistent design.
+Solution: Created design system.
+
+Experience 3:
+Problem: User complaints.
+Solution: Improved UX testing.

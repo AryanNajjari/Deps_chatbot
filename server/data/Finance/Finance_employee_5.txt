@@ -1,0 +1,15 @@
+Employee Name: Kevin Patel
+Role: Financial Controller
+Years at Company: 6
+
+Experience 1:
+Problem: Compliance risks.
+Solution: Strengthened audit procedures.
+
+Experience 2:
+Problem: Revenue leakage.
+Solution: Improved tracking systems.
+
+Experience 3:
+Problem: Manual processes.
+Solution: Introduced automation tools.

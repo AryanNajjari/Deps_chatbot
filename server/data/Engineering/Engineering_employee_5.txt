@@ -1,0 +1,15 @@
+Employee Name: Ethan Wilson
+Role: Full Stack Engineer
+Years at Company: 5
+
+Experience 1:
+Problem: Integration issues.
+Solution: Improved API contracts.
+
+Experience 2:
+Problem: Feature delays.
+Solution: Better sprint planning.
+
+Experience 3:
+Problem: Technical debt.
+Solution: Scheduled refactoring cycles.

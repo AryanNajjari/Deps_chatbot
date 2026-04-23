@@ -1,0 +1,15 @@
+Employee Name: Alex Johnson
+Role: Software Engineer
+Years at Company: 5
+
+Experience 1:
+Problem: Slow application performance.
+Solution: Optimized database queries.
+
+Experience 2:
+Problem: Frequent bugs.
+Solution: Implemented better testing.
+
+Experience 3:
+Problem: Poor code quality.
+Solution: Introduced code reviews.
