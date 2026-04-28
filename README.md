@@ -6,7 +6,7 @@ An intelligent, department-aware chatbot that uses **RAG (Retrieval-Augmented Ge
 
 ## 🌟 Overview
 
-This application allows users to select their department (HR, Finance, or Engineering) and ask questions. The AI then scans a knowledge base of specific employee-written case studies and challenges to provide an answer that is grounded in the company's actual history.
+This application allows users to select their department (HR, Finance, or Engineering) and ask questions. The AI then scans a **Vector Database** of specific employee-written case studies and challenges to provide an answer that is grounded in the company's actual history.
 
 ### 🚀 [Live Demo](https://deps-chatbot.vercel.app/)
 
@@ -17,22 +17,22 @@ This application allows users to select their department (HR, Finance, or Engine
 This is a full-stack application built with a modern web architecture:
 
 * **Frontend:** React.js (Vite) hosted on **Vercel**. It manages user roles and provides a real-time chat interface.
-* **Backend:** Node.js & Express hosted on **Render**. It acts as a secure gateway to the OpenAI API.
-* **AI Engine:** OpenAI's `gpt-4o-mini` model.
-* **Knowledge Base (RAG):** A custom file-system-based retrieval system. The backend reads `.txt` files from departmental folders to "inject" context into the AI's prompt.
-
-
+* **Backend:** Node.js & Express hosted on **Render**. It processes natural language queries and coordinates the RAG workflow.
+* **AI Engine:** OpenAI's `gpt-4o-mini` for chat completions and `text-embedding-3-small` for semantic search.
+* **Knowledge Base (Vector RAG):** * **Supabase (PostgreSQL):** Uses the `pgvector` extension to store and query high-dimensional embeddings.
+    * **Semantic Search:** Instead of simple keyword matching, the system finds information based on the mathematical "meaning" of the user's question.
 
 ---
 
 ## 📁 Project Structure
 
 ```text
-├── server/              # Node.js Backend
-│   ├── data/            # Knowledge Base (.txt files organized by dept)
-│   ├── index.js         # Main logic & RAG implementation
-│   └── .env             # Private API keys (hidden from GitHub)
-├── src/                 # React Frontend
-│   ├── App.jsx          # Chat UI & API communication
-│   └── main.jsx         # Entry point
-└── README.md            # You are here!
+├── server/                # Node.js Backend
+│   ├── data/              # Source Knowledge Base (.txt files for ingestion)
+│   ├── index.js           # Main API logic & Supabase Vector search
+│   ├── ingest.js          # Script to convert text files into database vectors
+│   └── .env               # Private API keys (Supabase & OpenAI)
+├── src/                   # React Frontend
+│   ├── App.jsx            # Chat UI & API communication
+│   └── main.jsx           # Entry point
+└── README.md              # You are here!
