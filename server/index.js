@@ -45,7 +45,7 @@ app.post("/chat", async (req, res) => {
     // STEP B: Search Supabase for the most relevant content snippets
     const { data: matchedDocs, error: searchError } = await supabase.rpc('match_documents', {
       query_embedding: queryVector,
-      match_threshold: 0.3, 
+      match_threshold: 0.5, 
       match_count: 5,       
       filter_role: role
     });
@@ -63,19 +63,22 @@ app.post("/chat", async (req, res) => {
 
     // STEP E: Construct the Multi-Message Array
     const messages = [
-      { 
-        role: "system", 
-        content: `You are an expert assistant for the ${role} department. 
-        Use the following internal documents to answer the user's question. 
-        Maintain context from the conversation history provided.
-        If the answer isn't in the text, use best practices for ${role}.
-        
-        INTERNAL KNOWLEDGE BASE:
-        ${knowledge}` 
-      },
-      ...shortHistory, // Spread previous messages into the array
-      { role: "user", content: message } // Add the newest question at the end
-    ];
+  { 
+    role: "system", 
+    content: `You are a strict internal assistant for the ${role} department. 
+    
+    RULES:
+    1. ONLY use the provided INTERNAL KNOWLEDGE BASE to answer.
+    2. If the answer is not in the text, say: "I'm sorry, I don't have information on that in our internal files."
+    3. DO NOT use your own outside knowledge.
+    4. ALWAYS mention specific names, files, or departments found in the text (e.g., "According to James Adamson...").
+    
+    INTERNAL KNOWLEDGE BASE:
+    ${knowledge}` 
+  },
+  ...shortHistory,
+  { role: "user", content: message }
+];
 
     // STEP F: Send everything to OpenAI
     const response = await client.chat.completions.create({
