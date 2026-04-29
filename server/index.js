@@ -45,7 +45,7 @@ app.post("/chat", async (req, res) => {
     // STEP B: Search Supabase for the most relevant content snippets
     const { data: matchedDocs, error: searchError } = await supabase.rpc('match_documents', {
       query_embedding: queryVector,
-      match_threshold: 0.5, 
+      match_threshold: 0.3, 
       match_count: 5,       
       filter_role: role
     });
