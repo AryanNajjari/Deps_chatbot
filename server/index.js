@@ -45,7 +45,7 @@ app.post("/chat", async (req, res) => {
     // STEP B: Search Supabase for the most relevant content snippets
     const { data: matchedDocs, error: searchError } = await supabase.rpc('match_documents', {
       query_embedding: queryVector,
-      match_threshold: 0.35, 
+      match_threshold: 0.25, 
       match_count: 5,       
       filter_role: role
     });
@@ -80,7 +80,7 @@ app.post("/chat", async (req, res) => {
 
     3. SOURCE ATTRIBUTION:
        - When an answer is found, clearly credit the person, file, or department mentioned in the text.
-       - Example format: "According to [Source Name]..." or "Based on the [Policy Name]..."
+       - Example format: "According to [Source Name]..."
 
     INTERNAL KNOWLEDGE BASE:
     ${knowledge}` 
