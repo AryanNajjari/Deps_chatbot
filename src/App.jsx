@@ -1,22 +1,25 @@
 import { useState } from 'react'
 
 function App() {
+  // Chat States
   const [role, setRole] = useState('')
   const [question, setQuestion] = useState('')
   const [messages, setMessages] = useState([])
   const [isTyping, setIsTyping] = useState(false)
 
+  // Admin States
+  const [adminFile, setAdminFile] = useState(null)
+  const [uploadStatus, setUploadStatus] = useState('')
+  const [isUploading, setIsUploading] = useState(false)
+
+  // --- Chat Logic ---
   const handleAsk = async () => {
-    // 1. Validation
     if (!role || !question.trim()) {
       alert("Please select a role and type a question.");
       return;
     }
 
     const currentQuestion = question;
-    
-    // 2. Add User message to UI
-    // We keep 'sender' and 'text' for the UI logic
     const userMessage = { sender: "user", text: currentQuestion };
     const updatedMessages = [...messages, userMessage];
     
@@ -25,34 +28,24 @@ function App() {
     setIsTyping(true);
 
     try {
-      // 3. Prepare History for Backend
-      // We convert our UI messages into the format the AI needs: { role: "user/assistant", content: "..." }
       const historyForBackend = messages.map(msg => ({
         role: msg.sender === "user" ? "user" : "assistant",
         content: msg.text
       }));
 
-      console.log("🚀 SENDING TO BACKEND WITH HISTORY...");
-
       const res = await fetch("https://deps-chatbot.onrender.com/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: currentQuestion,
           role: role,
-          history: historyForBackend // Sending the conversation memory here!
+          history: historyForBackend
         })
       });
 
-      if (!res.ok) {
-        throw new Error(`Server responded with ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`Server responded with ${res.status}`);
 
       const data = await res.json();
-      
-      // 4. Update UI with Bot reply
       const botMessage = { sender: "bot", text: data.reply };
       setMessages([...updatedMessages, botMessage]);
 
@@ -67,10 +60,49 @@ function App() {
     }
   }
 
+  // --- Admin Logic ---
+  const handleUpload = async () => {
+    if (!adminFile || !role) {
+      alert("Please select a department and a .txt file to upload.");
+      return;
+    }
+
+    setIsUploading(true);
+    setUploadStatus("Processing upload...");
+
+    const formData = new FormData();
+    formData.append("file", adminFile);
+    formData.append("role", role);
+
+    try {
+      const res = await fetch("https://deps-chatbot.onrender.com/admin/upload", {
+        method: "POST",
+        // Note: Do NOT set Content-Type header when sending FormData; 
+        // the browser needs to set it automatically with the boundary string.
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setUploadStatus(`✅ Success: ${data.message}`);
+        setAdminFile(null); // Clear file input
+      } else {
+        setUploadStatus(`❌ Error: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Upload Error:", error);
+      setUploadStatus("❌ Upload failed. check backend connection.");
+    } finally {
+      setIsUploading(false);
+    }
+  }
+
   return (
     <div style={{ padding: 20, maxWidth: 600, margin: "0 auto", fontFamily: "sans-serif" }}>
       <h1>Company Chatbot</h1>
 
+      {/* Department Selection */}
       <div style={{ marginBottom: 20 }}>
         <label style={{ display: "block", marginBottom: 5 }}><strong>Select Department:</strong></label>
         <select 
@@ -85,10 +117,11 @@ function App() {
         </select>
       </div>
 
+      {/* Chat Window */}
       <div style={{
           border: "1px solid #ccc",
           padding: 15,
-          height: 400,
+          height: 350,
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
@@ -121,6 +154,7 @@ function App() {
         )}
       </div>
 
+      {/* Chat Input */}
       <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
         <input
           type="text"
@@ -136,6 +170,53 @@ function App() {
         >
           Send
         </button>
+      </div>
+
+      {/* --- ADMIN PANEL SECTION --- */}
+      <div style={{ 
+        marginTop: 50, 
+        padding: 20, 
+        border: "2px dashed #bbb", 
+        borderRadius: 10, 
+        backgroundColor: "#fff" 
+      }}>
+        <h3 style={{ marginTop: 0 }}>🛠️ Admin: Update Knowledge Base</h3>
+        <p style={{ fontSize: "0.85em", color: "#666" }}>
+          Upload a <strong>.txt</strong> file to add new info to the <strong>{role || "selected"}</strong> department.
+        </p>
+        
+        <input 
+          type="file" 
+          accept=".txt" 
+          onChange={(e) => setAdminFile(e.target.files[0])}
+          style={{ marginBottom: 10, display: "block" }}
+        />
+        
+        <button 
+          onClick={handleUpload}
+          disabled={isUploading}
+          style={{ 
+            padding: "10px 15px", 
+            backgroundColor: isUploading ? "#ccc" : "#28a745", 
+            color: "white", 
+            border: "none", 
+            borderRadius: "5px", 
+            cursor: isUploading ? "not-allowed" : "pointer" 
+          }}
+        >
+          {isUploading ? "Uploading..." : `Upload to ${role || "Department"}`}
+        </button>
+
+        {uploadStatus && (
+          <p style={{ 
+            marginTop: 10, 
+            fontSize: "0.9em", 
+            fontWeight: "bold", 
+            color: uploadStatus.includes("✅") ? "green" : "red" 
+          }}>
+            {uploadStatus}
+          </p>
+        )}
       </div>
     </div>
   )
