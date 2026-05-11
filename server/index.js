@@ -3,9 +3,9 @@ import express from "express";
 import cors from "cors";
 import OpenAI from "openai";
 import { createClient } from "@supabase/supabase-js";
-import multer from "multer"; // Added for file uploads
+import multer from "multer";
 
-console.log("🔥 AI BACKEND WITH DYNAMIC UPLOAD & MEMORY RUNNING");
+console.log("🚀 BACKEND LIVE: CHAT + ADMIN MANAGEMENT ACTIVE");
 
 const app = express();
 
@@ -19,7 +19,7 @@ const supabase = createClient(
   process.env.SUPABASE_KEY
 );
 
-// Configure Multer to store files in memory temporarily
+// Configure Multer for file uploads (stored in memory)
 const upload = multer({ storage: multer.memoryStorage() });
 
 // 2. Middleware
@@ -28,11 +28,12 @@ app.use(express.json());
 
 // 3. Health Check Route
 app.get("/", (req, res) => {
-  res.send("Backend is working! Admin upload and Vector Search active.");
+  res.send("Backend is fully operational: Chat, Upload, List, and Delete routes active.");
 });
 
-// 4. ADMIN ROUTE: Upload and Embed New Files
-// This route replaces the need to run ingest.js manually
+// --- ADMIN ROUTES (For the Admin Portal) ---
+
+// A. UPLOAD: Embed and save a new file
 app.post("/admin/upload", upload.single("file"), async (req, res) => {
   const { role } = req.body;
   const file = req.file;
@@ -42,17 +43,16 @@ app.post("/admin/upload", upload.single("file"), async (req, res) => {
   }
 
   try {
-    console.log(`📥 Processing new file upload for ${role}...`);
     const content = file.buffer.toString("utf-8");
 
-    // STEP 1: Create embedding for the new content
+    // Create embedding
     const embeddingResponse = await client.embeddings.create({
       model: "text-embedding-3-small",
       input: content,
     });
     const embedding = embeddingResponse.data[0].embedding;
 
-    // STEP 2: Save to Supabase 'documents' table
+    // Save to Supabase
     const { error } = await supabase.from("documents").insert({
       content,
       role,
@@ -60,30 +60,60 @@ app.post("/admin/upload", upload.single("file"), async (req, res) => {
     });
 
     if (error) throw error;
-
-    res.json({ message: `Knowledge base updated successfully for ${role}!` });
+    res.json({ message: `Success! Knowledge added to ${role}.` });
   } catch (error) {
-    console.error("❌ UPLOAD ERROR:", error);
-    res.status(500).json({ error: "Failed to process and save the file." });
+    console.error("Upload Error:", error);
+    res.status(500).json({ error: "Failed to process and save file." });
   }
 });
 
-// 5. Main Chat Route (Vector RAG + Memory Logic)
+// B. LIST: Get all documents stored in the database
+app.get("/admin/documents", async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("documents")
+      .select("id, content, role, created_at")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+    res.json(data);
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    res.status(500).json({ error: "Failed to fetch documents list." });
+  }
+});
+
+// C. DELETE: Remove a specific document by ID
+app.delete("/admin/documents/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const { error } = await supabase
+      .from("documents")
+      .delete()
+      .eq("id", id);
+
+    if (error) throw error;
+    res.json({ message: "Document deleted successfully." });
+  } catch (error) {
+    console.error("Delete Error:", error);
+    res.status(500).json({ error: "Failed to delete document." });
+  }
+});
+
+// --- CHAT ROUTE (For the Chatbot Site) ---
+
 app.post("/chat", async (req, res) => {
   const { message, role, history = [] } = req.body;
 
   try {
-    console.log(`🔍 Processing request for ${role} with memory...`);
-
-    // STEP A: Create Embedding for user query
+    // Generate query embedding
     const embedRes = await client.embeddings.create({
       model: "text-embedding-3-small",
       input: message
     });
     const queryVector = embedRes.data[0].embedding;
 
-    // STEP B: Search Supabase
-    // Note: match_threshold is set to 0.3 as per your recent project adjustments
+    // Vector Search in Supabase
     const { data: matchedDocs, error: searchError } = await supabase.rpc('match_documents', {
       query_embedding: queryVector,
       match_threshold: 0.3, 
@@ -93,45 +123,30 @@ app.post("/chat", async (req, res) => {
 
     if (searchError) throw searchError;
 
-    // STEP C: Combine found snippets
     const knowledge = matchedDocs && matchedDocs.length > 0 
       ? matchedDocs.map(d => d.content).join("\n---\n")
-      : "No specific internal data found for this query.";
+      : "No internal data found.";
 
-    // STEP D: Prepare Conversation History (Last 10 messages)
-    const shortHistory = history.slice(-10);
-
-    // STEP E: Construct the Messages array
     const messages = [
       { 
         role: "system", 
-        content: `You are a professional assistant for the ${role} department. 
-        
-        GUIDELINES:
-        0. If the user is just introducing themselves, acknowledge them warmly.
-        1. CORE LOGIC: Match USER'S INTENT with the CONTEXT provided. Treat synonyms and different phrasing as the same concept.
-        2. STRICTNESS: If the INTERNAL KNOWLEDGE BASE below is empty, state that you do not have internal information. Do not invent policies.
-        3. SOURCE ATTRIBUTION: Clearly credit the source if found.
-
-        INTERNAL KNOWLEDGE BASE:
+        content: `You are a assistant for the ${role} department. Use the following context:
         ${knowledge}` 
       },
-      ...shortHistory,
+      ...history.slice(-10),
       { role: "user", content: message }
     ];
 
-    // STEP F: Send to OpenAI
     const response = await client.chat.completions.create({
       model: "gpt-4o-mini", 
       messages: messages,
     });
 
-    const reply = response.choices[0].message.content;
-    res.json({ reply });
+    res.json({ reply: response.choices[0].message.content });
 
   } catch (error) {
-    console.error("❌ ERROR:", error);
-    res.status(500).json({ reply: "I'm having trouble searching my internal brain right now." });
+    console.error("Chat Error:", error);
+    res.status(500).json({ reply: "Search error occurred." });
   }
 });
 
